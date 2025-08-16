@@ -8,6 +8,7 @@ SECRET_TOKEN = ENV["SECRET_TOKEN"] || abort("ERROR: SECRET_TOKEN environment var
 #  -d '{"one":1,"two":2,"token":"supersecrettoken123"}'
 set :bind, '127.0.0.1' # Allow external connections
 set :port, 8085
+set :environment, :production
 
 # Run before each request
 before do
