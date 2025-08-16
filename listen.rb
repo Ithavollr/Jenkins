@@ -27,6 +27,6 @@ post "/pacman" do
   asset_artifact_id = @data["asset_artifact_id"]
   puts "Received values -> run_id: #{run_id}, data_artifact_id: #{data_artifact_id}, asset_artifact_id: #{asset_artifact_id}"
   "Success: run_id=#{run_id}, data_artifact_id=#{data_artifact_id}, asset_artifact_id=#{asset_artifact_id}\n"
-  %x(wget -q -P cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{data_artifact_id}')
-  %x(wget -q -P cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{asset_artifact_id}')
+  %x(wget -q -P /servers/jenkins/cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{data_artifact_id}')
+  %x(wget -q -P /servers/jenkins/cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{asset_artifact_id}')
 end
