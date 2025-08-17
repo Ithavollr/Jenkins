@@ -12,22 +12,14 @@ set :environment, :production
 
 # Run before each request
 before do
-  if request.request_method == "POST"
-    request.body.rewind
-    @data = JSON.parse(request.body.read) rescue {}
-    if @data["token"] != SECRET_TOKEN
-      halt 403, "Forbidden: Invalid token\n"
-    end
-  end
+  auth_header = request.env["HTTP_AUTHORIZATION"]
+  halt 401, "Unauthorized" unless auth_header && auth_header == "Bearer #{SECRET_TOKEN}"
 end
 
 post "/pacman" do
-  # @data is available here
-  run_id = @data["run_id"]
-  data_artifact_id = @data["data_artifact_id"]
-  asset_artifact_id = @data["asset_artifact_id"]
-  puts "Received values -> run_id: #{run_id}, data_artifact_id: #{data_artifact_id}, asset_artifact_id: #{asset_artifact_id}"
-  "Success: run_id=#{run_id}, data_artifact_id=#{data_artifact_id}, asset_artifact_id=#{asset_artifact_id}\n"
-  %x(wget -q -P /servers/jenkins/cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{data_artifact_id}')
-  %x(wget -q -P /servers/jenkins/cache/ 'https://github.com/Ithavollr/PacMan/actions/runs/#{run_id}/artifacts/#{asset_artifact_id}')
+  File.open(File.join("/servers/jenkins/cache", "Ithavollr_rpack.zip"), "wb") do |file|
+    file.write(request.body.read)
+  end
+  status 200
+  body "File received and saved successfully."
 end
