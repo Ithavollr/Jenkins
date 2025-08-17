@@ -16,8 +16,16 @@ before do
   halt 401, "Unauthorized" unless auth_header && auth_header == "Bearer #{SECRET_TOKEN}"
 end
 
-post "/pacman" do
+post "/pacman-rpak" do
   File.open(File.join("/servers/jenkins/cache", "Ithavollr_rpack.zip"), "wb") do |file|
+    file.write(request.body.read)
+  end
+  status 200
+  body "File received and saved successfully."
+end
+
+post "/pacman-dpak" do
+  File.open(File.join("/servers/jenkins/cache", "Ithavollr_dpack.zip"), "wb") do |file|
     file.write(request.body.read)
   end
   status 200
